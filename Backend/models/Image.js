@@ -1,13 +1,20 @@
 const mongoose = require('mongoose');
 
-const ImageSchema = new mongoose.Schema({
+const imageSchema = new mongoose.Schema({
+  imagePath: {
+    type: String,
+    required: false,
+    trim: true
+  },
   name: {
     type: String,
     required: true,
+    default: 'Untitled',
     trim: true
   },
   description: {
     type: String,
+    default: '',
     trim: true
   },
   value: {
@@ -15,20 +22,34 @@ const ImageSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  quantity: {
-    type: Number,
-    required: true,
-    default: 0,
-    min: 0
-  },
-  imagePath: {
-    type: String,
+  uploadedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
+  }
+}, {
+  timestamps: true,
+  toJSON: { 
+    virtuals: true,
+    transform: function(doc, ret) {
+      // Garante que imagePath seja incluído na resposta
+      ret.imagePath = ret.imagePath || '';
+      return ret;
+    }
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  toObject: { 
+    virtuals: true,
+    transform: function(doc, ret) {
+      // Garante que imagePath seja incluído na resposta
+      ret.imagePath = ret.imagePath || '';
+      return ret;
+    }
   }
 });
 
-module.exports = mongoose.model('Image', ImageSchema);
+// Virtual para URL da imagem
+imageSchema.virtual('url').get(function() {
+  return this.imagePath || '';
+});
+
+module.exports = mongoose.model('Image', imageSchema);
