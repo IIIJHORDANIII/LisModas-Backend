@@ -12,6 +12,9 @@ router.get('/', imageController.getAllImages);
 // Obter uma imagem específica
 router.get('/:id', imageController.getImageById);
 
+// Atualizar quantidade
+router.patch('/:id', imageController.updateQuantity);
+
 // Deletar uma imagem
 router.delete('/:id', imageController.deleteImage);
 

@@ -15,6 +15,12 @@ const ImageSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
+  quantity: {
+    type: Number,
+    required: true,
+    default: 0,
+    min: 0
+  },
   imagePath: {
     type: String,
     required: true

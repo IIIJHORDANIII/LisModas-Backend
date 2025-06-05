@@ -77,3 +77,26 @@ exports.deleteImage = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.updateQuantity = async (req, res, next) => {
+  try {
+    const { quantity } = req.body;
+    const imageId = req.params.id;
+
+    if (typeof quantity !== 'number' || quantity < 0) {
+      return res.status(400).json({ error: 'Quantidade inválida' });
+    }
+
+    const image = await Image.findById(imageId);
+    if (!image) {
+      return res.status(404).json({ error: 'Imagem não encontrada' });
+    }
+
+    image.quantity = quantity;
+    await image.save();
+
+    res.json(image);
+  } catch (error) {
+    next(error);
+  }
+};
